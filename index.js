@@ -30,29 +30,38 @@ const allowedHosts = [
 let connected = await transporter.verify()
 if (!connected) {
   console.log("Failed to connect to email service, exiting...");
-  process.abort()
+  process.abort();
 }
 console.log("Email Service Connected")
 
 app.get('/', (req, res) => {
-  res.send("hello")
+  res.send("hello");
 })
 
 app.post('/', async (req, res) => {
-  console.log("got a request");
-  if (!allowedHosts.includes(req.ip))
-    res.status(402).send("Unrecognised host")
-  console.log(req.body)
-  let email = {
-    from: from,
-    ...req.body,
+  try {
+    console.log("got a request");
+    if (!allowedHosts.includes(req.ip))
+      res.status(402).send("Unrecognised host")
+    console.log(req.body)
+    let email = {
+      from: from,
+      ...req.body,
+    }
+    let info = await transporter.sendMail(email);
+    if (info.accepted) {
+      console.log("Email sent");
+      res.send()
+    }
+    else {
+      console.log("Email not sent");
+      res.status(500).send()
+    }
+  } catch (error) {
+    res.status(500).send()
   }
-  let info = await transporter.sendMail(email);
-  if (info.accepted) console.log("Email sent");
-  else console.log("Email not sent");
-  res.send()
-})
+});
 
-app.listen(process.env.SERVER_PORT)
+app.listen(process.env.SERVER_PORT);
 console.log("server running on " + process.env.SERVER_PORT);
 // 
