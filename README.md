@@ -27,14 +27,17 @@ node ./index.js
 ```
 POST body:
 {
-  to:
-  subject:
-  text:
+  to: comma separated like of email addresses
+  subject: subject of the email
+  text?: (optional) plain text body
+  html?: (optional) html body
 }
+text and html are optional, you can use either, both or neither 
 
 In Powershell:
 Invoke-WebRequest -Uri http://your_server:port -Method POST -Body @{to="email@to.send.to,another@email";subject="Email Subject";text="Body of email"}
 ```
 ### ✔️ You'll receive a status of either:
 - 200: Success
+- 403: Not on allowed list
 - 500: Failure

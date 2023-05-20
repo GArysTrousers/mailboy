@@ -42,19 +42,22 @@ app.post('/', async (req, res) => {
   try {
     console.log("got a request");
     if (!allowedHosts.includes(req.ip))
-      res.status(402).send("Unrecognised host")
-    console.log(req.body)
+      res.status(403).send()
     let email = {
       from: from,
-      ...req.body,
+      to: req.body.to,
+      subject: req.body.subject,
+      text: req.body.text || '',
+      html: req.body.html || ''
     }
+    console.log(email);
     let info = await transporter.sendMail(email);
     if (info.accepted) {
-      console.log("Email sent");
+      console.log("email sent");
       res.send()
     }
     else {
-      console.log("Email not sent");
+      console.log("email not sent");
       res.status(500).send()
     }
   } catch (error) {
