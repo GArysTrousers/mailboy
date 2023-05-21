@@ -27,22 +27,30 @@ const allowedHosts = [
   ...process.env.ALLOWED_HOSTS.split(',')
 ]
 
-let connected = await transporter.verify()
-if (!connected) {
-  console.log("Failed to connect to email service, exiting...");
+try {
+  await transporter.verify()
+  console.log("email service connected")
+} catch (error) {
+  console.log("failed to connect to email service, exiting...");
   process.abort();
 }
-console.log("Email Service Connected")
 
 app.get('/', (req, res) => {
-  res.send("hello");
+  if (!allowedHosts.includes(req.ip)) {
+    console.log("rejected hello from " + req.ip)
+    return res.send("Hello, I don't know you");
+  }
+  console.log("accepted hello from " + req.ip)
+  res.send("Hello, I know you");
 })
 
 app.post('/', async (req, res) => {
   try {
-    console.log("got a request");
-    if (!allowedHosts.includes(req.ip))
-      res.status(403).send()
+    if (!allowedHosts.includes(req.ip)) {
+      console.log("rejected request from " + req.ip)
+      return res.status(403).send()
+    }
+    console.log("accepted request from " + req.ip)
     let email = {
       from: from,
       to: req.body.to,
@@ -54,7 +62,7 @@ app.post('/', async (req, res) => {
     let info = await transporter.sendMail(email);
     if (info.accepted) {
       console.log("email sent");
-      res.send()
+      res.status(200).send()
     }
     else {
       console.log("email not sent");
@@ -67,4 +75,3 @@ app.post('/', async (req, res) => {
 
 app.listen(process.env.SERVER_PORT);
 console.log("server running on " + process.env.SERVER_PORT);
-// 
