@@ -2,6 +2,7 @@ import { config } from "dotenv";
 config()
 import express from 'express'
 import nodemailer from "nodemailer";
+import { renderTemplate } from "./lib/template-renderer.js";
 const app = express()
 app.use(express.urlencoded({ extended: true }))
 
@@ -55,10 +56,14 @@ app.post('/', async (req, res) => {
       from: from,
       to: req.body.to,
       subject: req.body.subject,
-      text: req.body.text || '',
-      html: req.body.html || ''
     }
-    console.log(email);
+    if (req.body.plainText) email.plainText = req.body.plainText
+    if (req.body.template) {
+      email.html = await renderTemplate(req.body.template, req.body.html)
+    } else if (req.body.html) {
+      email.html = req.body.html
+    }
+
     let info = await transporter.sendMail(email);
     if (info.accepted) {
       console.log("email sent");
@@ -69,6 +74,7 @@ app.post('/', async (req, res) => {
       res.status(500).send()
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send()
   }
 });

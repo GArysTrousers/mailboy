@@ -29,15 +29,23 @@ POST body:
 {
   to: comma separated like of email addresses
   subject: subject of the email
-  text?: (optional) plain text body
   html?: (optional) html body
+  plainText?: (optional) plain text body
+  template?: (optional) name of the template to use 
 }
-text and html are optional, you can use either, both or neither 
+html and plainText are optional, you can use either or both (or neither).
+template is also optional, but if present, html should be included if the template contains {{body}}.
 
 In Powershell:
-Invoke-WebRequest -Uri http://your_server:port -Method POST -Body @{to="email@to.send.to,another@email";subject="Email Subject";text="Body of email"}
+Invoke-WebRequest -Uri http://your_server:port -Method POST -Body @{to="email@to.send.to,another@email";subject="Email Subject";html="Body of email"}
 ```
 ### ✔️ You'll receive a status of either:
 - 200: Success
 - 403: Not on allowed list
 - 500: Failure
+### ⚡ Templates
+You can create templates for your emails by placing a file named (template-name).html in the templates folder, then in your POST request, specify the name of the template you'd like to use.
+
+A template can contain {{body}}, which will be replaced by the html specified in the POST body.
+
+An example template called 'basic' is included.
