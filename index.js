@@ -37,21 +37,25 @@ try {
 }
 
 app.get('/', (req, res) => {
+  let output = "";
   if (!allowedHosts.includes(req.ip)) {
-    console.log("rejected hello from " + req.ip)
-    return res.send("Hello, I don't know you");
+    console.log("✖ rejected hello from " + req.ip)
+    output += "Hello, I don't know you";
+  } else {
+    console.log("✓ accepted hello from " + req.ip)
+    output += "Hello, I know you";
   }
-  console.log("accepted hello from " + req.ip)
-  res.send("Hello, I know you");
+  output += ' (' + req.ip + ')'
+  res.send(output);
 })
 
 app.post('/', async (req, res) => {
   try {
     if (!allowedHosts.includes(req.ip)) {
-      console.log("rejected request from " + req.ip)
+      console.log("✖ rejected request from " + req.ip)
       return res.status(403).send()
     }
-    console.log("accepted request from " + req.ip)
+    console.log("✓ accepted request from " + req.ip)
     let email = {
       from: from,
       to: req.body.to,

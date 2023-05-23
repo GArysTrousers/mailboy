@@ -49,3 +49,14 @@ You can create templates for your emails by placing a file named (template-name)
 A template can contain {{body}}, which will be replaced by the html specified in the POST body.
 
 An example template called 'basic' is included.
+### 🐛 Troubleshooting
+1. PC can't make successful POST requests
+  - Check that the pc that is making the request is allowed to by opening a browser to the server address:port, you should see the message "Hello, I (Don't) know you (ip_address)"
+  - If it says it doesn't know you, make sure that ip_address is in your .env file, then restart the server
+  - Also if it says your ip is "::ffff:ipv4" put the whole thing in including the "::ffff:"
+2. Server errors when starting
+  - Make sure your .env file has ALL the properties
+  - Make sure the smtp settings are correct (host, port, email, password)
+3. Server errors when sending templated emails
+  - Check that the template name is correct
+  - Make sure the process is started in the same directory as the index.js file (for file path reasons)
