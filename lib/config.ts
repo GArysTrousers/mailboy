@@ -1,4 +1,4 @@
-import { Schema, z } from "zod";
+import { z } from "zod";
 const schema = {
   config: z.object({
     port: z.number(),
