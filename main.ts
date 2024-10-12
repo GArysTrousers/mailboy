@@ -66,15 +66,15 @@ const router = new Router()
         text: body.text || '',
         html: body.html || ''
       }
-      // console.log(email);
       try {
         await transporter.sendMail(email);
         log(`SUCCESS: from(${info.hostname}) to(${email.to}) sub(${email.subject})`);
       } catch (e) {
-        log(`ERROR: from(${info.hostname}) to(${email.to}) sub(${email.subject})`);
+        log(`ERROR: from(${info.hostname}) to(${email.to}) sub(${email.subject})\n${e.name}: ${e.message}`);
         responce.init.status = 500
       }
     } catch (e) {
+      console.log(`Internal Error: ${e.name}: ${e.message}`)
       responce.init.status = 500
     }
     return responce
