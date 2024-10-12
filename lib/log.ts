@@ -1,9 +1,9 @@
 import dayjs from "npm:dayjs";
 
-let logFile: string | undefined = undefined
+let logFile: string | null = null
 
 
-export function setLogFile(filepath: string | undefined) {
+export function setLogFile(filepath: string | null) {
   logFile = filepath
 }
 
@@ -11,7 +11,7 @@ export async function log(message: string) {
   try {
     const text = `${dayjs().format('YYYY-MM-DD HH:mm')} :: ${message}\n`
     console.log(message)
-    if (logFile !== undefined) await Deno.writeTextFile(logFile, text, {append: true})
+    if (logFile !== null) await Deno.writeTextFile(logFile, text, {append: true})
   } catch (_) {
     //
   }

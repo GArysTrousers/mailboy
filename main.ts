@@ -1,7 +1,7 @@
 // deno-lint-ignore-file require-await
 import { getConfig } from "./lib/config.ts";
 // @deno-types="npm:nodemailer"
-import nodemailer from "nodemailer";
+import nodemailer from "npm:nodemailer";
 
 import { HttpError, Router } from "./lib/router.ts";
 import { log, setLogFile } from "./lib/log.ts";
@@ -10,12 +10,16 @@ const config = getConfig()
 setLogFile(config.logFile)
 
 const transporter = nodemailer.createTransport({
-  host: config.sender.host,
-  port: config.sender.port,
+  host: config.smtp.host,
+  port: config.smtp.port,
   auth: {
-    user: config.sender.email,
-    pass: config.sender.password
+    user: config.smtp.email,
+    pass: config.smtp.password
   },
+  secure: !!config.smtp.secure,
+  tls: {
+    rejectUnauthorized: !!config.smtp.rejectUnauthorized
+  }
 })
 
 
@@ -56,7 +60,7 @@ const router = new Router()
     const body = await request.json()
     try {
       const email = {
-        from: `${config.sender.name} <${config.sender.email}>`,
+        from: `${config.smtp.name} <${config.smtp.email}>`,
         to: body.to,
         subject: body.subject,
         text: body.text || '',
