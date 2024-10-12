@@ -1,0 +1,28 @@
+{
+  "version": "4",
+  "specifiers": {
+    "npm:dayjs@*": "1.11.13",
+    "npm:nodemailer@^6.9.15": "6.9.15",
+    "npm:zod@^3.23.8": "3.23.8"
+  },
+  "npm": {
+    "dayjs@1.11.13": {
+      "integrity": "sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg=="
+    },
+    "nodemailer@6.9.15": {
+      "integrity": "sha512-AHf04ySLC6CIfuRtRiEYtGEXgRfa6INgWGluDhnxTZhHSKvrBu7lc1VVchQ0d8nPc4cFaZoPq8vkyNoZr0TpGQ=="
+    },
+    "zod@3.23.8": {
+      "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g=="
+    }
+  },
+  "remote": {
+    "https://deno.land/std@0.173.0/encoding/base64.ts": "7de04c2f8aeeb41453b09b186480be90f2ff357613b988e99fabb91d2eeceba1"
+  },
+  "workspace": {
+    "dependencies": [
+      "npm:nodemailer@^6.9.15",
+      "npm:zod@^3.23.8"
+    ]
+  }
+}
