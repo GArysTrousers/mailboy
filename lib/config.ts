@@ -40,16 +40,20 @@ export function getConfig() {
   try {
     return schema.config.parse(JSON.parse(Deno.readTextFileSync('config.json')));
   } catch (e) {
-    if (e instanceof ZodError) {
-      console.log("\nError: config.json contains the following errors:\n")
-      console.log(e.issues)
-      alert("\n")
-    }
-    else if (e.name === "NotFound") {
-      if (confirm("\nI couldn't find a config.json, should I make one?")) {
-        Deno.writeTextFileSync('config.json', JSON.stringify(defaultConfig, null, 2))
-        alert("Fill in the config.json then start the app again.");
+    if (e instanceof Error) {
+      if (e instanceof ZodError) {
+        console.log("\nError: config.json contains the following errors:\n")
+        console.log(e.issues)
+        alert("\n")
       }
+      else if (e.name === "NotFound") {
+        if (confirm("\nI couldn't find a config.json, should I make one?")) {
+          Deno.writeTextFileSync('config.json', JSON.stringify(defaultConfig, null, 2))
+          alert("Fill in the config.json then start the app again.");
+        }
+      }
+    } else {
+      console.log(e);
     }
     Deno.exit()
   }

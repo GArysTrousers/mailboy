@@ -87,7 +87,7 @@ interface RequestInfo {
 export class HttpError extends Error {
   status: number;
   override message: string;
-  
+
   constructor(status: number, message: string) {
     super();
     this.status = status

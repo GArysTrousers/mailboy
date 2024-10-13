@@ -16,18 +16,20 @@ const transporter = nodemailer.createTransport({
     user: config.smtp.email,
     pass: config.smtp.password
   },
-  secure: !!config.smtp.secure,
+  secure: config.smtp.secure,
   tls: {
-    rejectUnauthorized: !!config.smtp.rejectUnauthorized
-  }
+    rejectUnauthorized: config.smtp.rejectUnauthorized,
+  },
 })
 
+console.log("Connecting to email server...");
 
 try {
   await transporter.verify()
-  log("email service connected")
-} catch (_e) {
-  log("failed to connect to email service, exiting...");
+  log("Connected successfully!")
+} catch (e) {
+  if (e instanceof Error)
+    log("Failed to connect: " + e.message);
   Deno.exit()
 }
 
@@ -47,12 +49,9 @@ const router = new Router()
     responce.body = `Hello!\nYour IP: ${info.hostname}`
     if (isAllowed(info.hostname)) {
       responce.body += `\nYou're allowed to send emails`
+    } else {
+      responce.body += `\nYou're not allowed to use this service`
     }
-    return responce;
-  })
-  .get('/test', async ({ request, responce, info }) => {
-    bouncer(info.hostname)
-    responce.body = `Hello Dorld! ${request}`
     return responce;
   })
   .post('/send', async ({ request, responce, info }) => {
@@ -70,11 +69,13 @@ const router = new Router()
         await transporter.sendMail(email);
         log(`SUCCESS: from(${info.hostname}) to(${email.to}) sub(${email.subject})`);
       } catch (e) {
-        log(`ERROR: from(${info.hostname}) to(${email.to}) sub(${email.subject})\n${e.name}: ${e.message}`);
+        if (e instanceof Error)
+          log(`ERROR: from(${info.hostname}) to(${email.to}) sub(${email.subject})\n${e.name}: ${e.message}`);
         responce.init.status = 500
       }
     } catch (e) {
-      console.log(`Internal Error: ${e.name}: ${e.message}`)
+      if (e instanceof Error)
+        console.log(`Internal Error: ${e.name}: ${e.message}`)
       responce.init.status = 500
     }
     return responce
