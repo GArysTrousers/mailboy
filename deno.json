@@ -3,10 +3,10 @@
   "tasks": {
     "dev": "deno run -RSENW --unsafely-ignore-certificate-errors --watch main.ts",
     "compile:all": "deno task compile:win && deno task compile:win-proton && deno task compile:linux && deno task compile:linux-proton",
-    "compile:win": "deno compile -RSENW --target x86_64-pc-windows-msvc -o ./build/watchman.exe main.ts",
-    "compile:linux": "deno compile -RSENW --target x86_64-unknown-linux-gnu -o ./build/watchman main.ts",
-    "compile:win-proton": "deno compile -RSENW --unsafely-ignore-certificate-errors --target x86_64-pc-windows-msvc -o ./build/watchman-proton.exe main.ts",
-    "compile:linux-proton": "deno compile -RSENW --unsafely-ignore-certificate-errors --target x86_64-unknown-linux-gnu -o ./build/watchman-proton main.ts"
+    "compile:win": "deno compile -RSENW --target x86_64-pc-windows-msvc -o ./build/mailboy-win.exe main.ts",
+    "compile:linux": "deno compile -RSENW --target x86_64-unknown-linux-gnu -o ./build/mailboy-linux main.ts",
+    "compile:win-proton": "deno compile -RSENW --unsafely-ignore-certificate-errors --target x86_64-pc-windows-msvc -o ./build/mailboy-proton-win.exe main.ts",
+    "compile:linux-proton": "deno compile -RSENW --unsafely-ignore-certificate-errors --target x86_64-unknown-linux-gnu -o ./build/mailboy-proton-linux main.ts"
   },
   "imports": {
     "nodemailer": "npm:nodemailer@^6.9.15",
